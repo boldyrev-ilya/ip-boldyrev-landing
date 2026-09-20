@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "jira": {
+      "enabled": true
+    },
+    "github": {
+      "enabled": true
+    }
+  }
+}
