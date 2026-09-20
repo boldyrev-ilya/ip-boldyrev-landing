@@ -436,7 +436,7 @@ export default function Home() {
             <small>цифровые проекты · notary-it.pro</small>
           </span>
         </a>
-        <div style="display:flex; align-items:center; gap:24px;">
+        <div style={{ display:"flex", alignItems:"center", gap:"24px" }}>
           <a className="cta-nav" href="/about" style={{ borderBottom:"none" }}>
             <span>О нас</span>
           </a>
