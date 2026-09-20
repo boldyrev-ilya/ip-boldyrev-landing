@@ -2,96 +2,98 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+type Entered = { entered: boolean };
 
-type WP = { entered: boolean };
+// ════════════════════════════════════════════════════════════════════
+// SCREEN 1 — PROMISE: text-dominant, compact route widget as accent
+// ════════════════════════════════════════════════════════════════════
 
-// ─── Widget 1: Hero – animated route steps ────────────────────────────────────
-
-const HERO_STEPS = [
+const ROUTE_STEPS = [
   { label: "Выбрал задачу", sub: "Доверенность на автомобиль" },
-  { label: "Получил список документов", sub: "3 пункта · 10 минут подготовки" },
-  { label: "Записался на удобное время", sub: "Вт 14:30 · подтверждено" },
+  { label: "Получил список документов", sub: "3 пункта · 10 минут" },
+  { label: "Записался на 14:30", sub: "Вт · подтверждено" },
 ];
 
-function HeroWidget({ entered }: WP) {
+function RouteMini({ entered }: Entered) {
   const [done, setDone] = useState<number[]>([]);
   useEffect(() => {
     if (!entered) return;
-    const timers = HERO_STEPS.map((_, i) =>
-      setTimeout(() => setDone((p) => [...p, i]), 500 + i * 750),
+    const timers = ROUTE_STEPS.map((_, i) =>
+      setTimeout(() => setDone((p) => [...p, i]), 600 + i * 800),
     );
     return () => timers.forEach(clearTimeout);
   }, [entered]);
   return (
-    <div className="widget">
-      <div className="wbar">
+    <div className="route-mini fade-in">
+      <div className="route-mini-bar">
         <span>notary-it.pro</span>
-        <span className="wbar-ok">
-          <span className="dot" />
-          маршрут активен
+        <span className="route-mini-ok">
+          <span className="dot" /> маршрут активен
         </span>
       </div>
-      <div className="steps">
-        {HERO_STEPS.map((s, i) => (
-          <div key={i} className={`step${done.includes(i) ? " done" : ""}`}>
-            <div className="step-num">{done.includes(i) ? "✓" : i + 1}</div>
+      <div className="route-mini-steps">
+        {ROUTE_STEPS.map((s, i) => (
+          <div key={i} className={`rmini-step${done.includes(i) ? " done" : ""}`}>
+            <div className="rmini-num">{done.includes(i) ? "✓" : i + 1}</div>
             <div>
-              <p className="step-label">{s.label}</p>
-              <p className="step-sub">{s.sub}</p>
+              <div className="rmini-lbl">{s.label}</div>
+              <div className="rmini-sub">{s.sub}</div>
             </div>
           </div>
         ))}
       </div>
-      <div className="wfoot">
-        <span className="wfoot-muted">Клиент приходит подготовленным</span>
+      <div className="route-mini-foot">
+        <span>клиент приходит подготовленным</span>
         <span className="badge b-lime">готово</span>
       </div>
     </div>
   );
 }
 
-// ─── Widget 2: Friction – animated call log ───────────────────────────────────
+// ════════════════════════════════════════════════════════════════════
+// SCREEN 2 — FRICTION: full-width call board as the main material
+// ════════════════════════════════════════════════════════════════════
 
 const CALLS = [
   { t: "09:14", n: "Иванова А.В.", s: "повторный вопрос", badge: "b-red", mark: "✕" },
-  { t: "10:32", n: "Петров Д.С.", s: "уточнение документов", badge: "b-sky b-ink", mark: "?" },
+  { t: "10:32", n: "Петров Д.С.", s: "уточнение документов", badge: "b-dim", mark: "?" },
   { t: "11:05", n: "Сидорова В.Н.", s: "ожидает ответа", badge: "b-dim", mark: "○" },
   { t: "11:47", n: "Козлов М.А.", s: "пропущен", badge: "b-red", mark: "✕" },
+  { t: "12:20", n: "Фёдорова Л.П.", s: "перезвонить", badge: "b-dim", mark: "↻" },
 ];
 
-function FrictionWidget({ entered }: WP) {
+function CallBoard({ entered }: Entered) {
   return (
-    <div className="widget">
-      <div className="wbar">
-        <span>входящие звонки</span>
-        <span>сегодня</span>
+    <div className="call-board fade-in">
+      <div className="call-board-head">
+        <span>входящие звонки · сегодня</span>
+        <span className="call-board-ok">
+          <span className="dot" /> без результата
+        </span>
       </div>
-      <div className="calls">
+      <div className="call-board-body stagger">
         {CALLS.map((c, i) => (
-          <div
-            key={i}
-            className={`call sa${entered ? " in" : ""}`}
-            style={{ transitionDelay: `${i * 100}ms` }}
-          >
-            <span className="call-t">{c.t}</span>
+          <div key={i} className="cb-row">
+            <span className="cb-time">{c.t}</span>
             <div>
-              <div className="call-n">{c.n}</div>
-              <div className="call-s">{c.s}</div>
+              <div className="cb-name">{c.n}</div>
+              <div className="cb-sub">{c.s}</div>
             </div>
             <span className={`badge ${c.badge}`}>{c.mark}</span>
           </div>
         ))}
       </div>
-      <div className="wfoot">
-        <span className="wfoot-muted">4 обращения без результата</span>
-        <span className="badge b-red">! !</span>
+      <div className="cb-board-foot">
+        <span>5 обращений — ни одного завершённого</span>
+        <span className="badge b-red">трение</span>
       </div>
     </div>
   );
 }
 
-// ─── Widget 3: Route – interactive task selector ──────────────────────────────
+// ════════════════════════════════════════════════════════════════════
+// SCREEN 3 — ROUTE: interactive task selector, centered
+// ════════════════════════════════════════════════════════════════════
 
 const TASKS: Record<string, string[]> = {
   "Доверенность": ["Паспорт — ваш и поверенного", "Данные о полномочиях", "Запись: до 20 минут"],
@@ -100,100 +102,94 @@ const TASKS: Record<string, string[]> = {
   "Другое": ["Опишите задачу — уточним список", "Подберём удобное время"],
 };
 
-function RouteWidget({ entered: _ }: WP) {
+function RoutePanel(_: Entered) {
   const [sel, setSel] = useState("Доверенность");
   const steps = TASKS[sel] ?? [];
   return (
-    <div className="widget">
-      <div className="wbar">
+    <div className="route-panel fade-in">
+      <div className="route-panel-bar">
         <span>выберите задачу</span>
-        <span className="wbar-ok">
-          <span className="dot" />
-          следующий шаг
+        <span className="route-panel-ok">
+          <span className="dot" /> следующий шаг
         </span>
       </div>
-      <div className="tasks">
+      <div className="route-tasks">
         {Object.keys(TASKS).map((t) => (
           <button
             key={t}
-            className={`task-btn${sel === t ? " sel" : ""}`}
+            className={`rtask${sel === t ? " sel" : ""}`}
             onClick={() => setSel(t)}
           >
             {t}
           </button>
         ))}
       </div>
-      <div className="task-steps">
+      <div className="route-checklist">
         {steps.map((s, i) => (
-          <div
-            key={`${sel}-${i}`}
-            className="task-step show"
-            style={{ transitionDelay: `${i * 80}ms` }}
-          >
-            <span className="task-step-i">→</span>
+          <div key={`${sel}-${i}`} className="rc-item show" style={{ transitionDelay: `${i * 80}ms` }}>
+            <span className="rc-arrow">→</span>
             <span>{s}</span>
           </div>
         ))}
       </div>
-      <div className="wfoot">
-        <span className="wfoot-muted">Клиент знает, что взять с собой</span>
+      <div className="route-panel-foot">
+        <span>клиент знает, что взять с собой</span>
       </div>
     </div>
   );
 }
 
-// ─── Widget 4: Notary site – browser mockup ───────────────────────────────────
+// ════════════════════════════════════════════════════════════════════
+// SCREEN 4 — SITE: browser mockup dominates
+// ════════════════════════════════════════════════════════════════════
 
-function SiteWidget({ entered }: WP) {
+function BrowserMock({ entered }: Entered) {
   return (
-    <div className="browser-widget">
-      <div className="b-chrome">
-        <div className="b-dots">
-          <div className="b-dot" />
-          <div className="b-dot" />
-          <div className="b-dot" />
+    <div className="browser fade-in">
+      <div className="browser-chrome">
+        <div className="browser-dots">
+          <div className="browser-dot" />
+          <div className="browser-dot" />
+          <div className="browser-dot" />
         </div>
-        <div className="b-addr">notary-office.ru</div>
+        <div className="browser-addr">notary-office.ru</div>
       </div>
-      <div className="b-body">
-        <div className={`sa${entered ? " in" : ""}`} style={{ transitionDelay: "0ms" }}>
-          <div className="b-nav">
-            <span>Услуги</span>
-            <span>Тарифы</span>
-            <span>О нас</span>
-            <span className="b-nav-accent">Записаться</span>
-          </div>
+      <div className="browser-body stagger">
+        <div className="browser-nav">
+          <span>Услуги</span>
+          <span>Тарифы</span>
+          <span>О конторе</span>
+          <span className="browser-nav-accent">Записаться</span>
         </div>
-        <div className={`sa${entered ? " in" : ""}`} style={{ transitionDelay: "130ms" }}>
-          <p className="b-title">Нотариус Иванова Е.А.</p>
-          <p className="b-sub">Нотариальный округ · г. Москва</p>
-          <a className="b-cta" href="#site">Записаться на приём →</a>
+        <div>
+          <p className="browser-title">Нотариус Иванова Е.А.</p>
+          <p className="browser-subline">Нотариальный округ · г. Москва</p>
+          <a className="browser-cta-btn" href="#site">Записаться на приём →</a>
         </div>
-        <div className={`sa${entered ? " in" : ""}`} style={{ transitionDelay: "260ms" }}>
-          <div className="b-grid">
-            {["Доверенности", "Наследство", "Сделки", "Заверение"].map((s) => (
-              <div key={s} className="b-tag">{s}</div>
-            ))}
-          </div>
+        <div className="browser-tags">
+          {["Доверенности", "Наследство", "Сделки", "Заверение"].map((s) => (
+            <div key={s} className="browser-tag">{s}</div>
+          ))}
         </div>
       </div>
     </div>
   );
 }
 
-// ─── Widget 5: Online booking – service + time slots ─────────────────────────
+// ════════════════════════════════════════════════════════════════════
+// SCREEN 5 — BOOKING: full interactive calendar
+// ════════════════════════════════════════════════════════════════════
 
 const SVCS = ["Доверенность", "Наследство", "Сделка"];
 const DAYS = ["Пн", "Вт", "Ср", "Чт", "Пт"];
 const TIMES = ["10:00", "11:00", "12:00"];
-// 1=free, 0=taken, null=closed
-const MATRIX = [
+const MATRIX: readonly (readonly (number | null)[])[] = [
   [1, 1, null, 1, 0],
   [0, 1, null, 0, 1],
   [1, 1, null, 1, 1],
-] as const;
+];
 
-function BookingWidget({ entered: _ }: WP) {
+function BookingPanel(_: Entered) {
   const [svc, setSvc] = useState(0);
   const [slot, setSlot] = useState<[number, number] | null>(null);
   const [confirmed, setConfirmed] = useState(false);
@@ -206,14 +202,12 @@ function BookingWidget({ entered: _ }: WP) {
 
   if (confirmed && slot) {
     return (
-      <div className="widget">
-        <div className="book-confirm">
-          <div className="book-confirm-check">✓</div>
-          <p className="book-confirm-label">Запись подтверждена</p>
-          <span className="badge b-lime">
-            {DAYS[slot[1]]} {TIMES[slot[0]]}
-          </span>
-          <span style={{ font: "400 10px/1 var(--f-mono)", opacity: .45 }}>
+      <div className="booking-panel fade-in">
+        <div className="booking-confirmed">
+          <div className="booking-confirmed-check">✓</div>
+          <p className="booking-confirmed-label">Запись подтверждена</p>
+          <span className="badge b-lime">{DAYS[slot[1]]} {TIMES[slot[0]]}</span>
+          <span style={{ font: "400 11px/1 var(--f-mono)", opacity: 0.4 }}>
             уведомление отправлено
           </span>
         </div>
@@ -222,38 +216,35 @@ function BookingWidget({ entered: _ }: WP) {
   }
 
   return (
-    <div className="widget">
-      <div className="wbar">
+    <div className="booking-panel fade-in">
+      <div className="booking-bar">
         <span>онлайн-запись</span>
-        <span className="wbar-ok">
-          <span className="dot" />
-          доступно
+        <span className="booking-ok">
+          <span className="dot" /> доступно
         </span>
       </div>
-      <div className="svcs">
+      <div className="booking-services">
         {SVCS.map((s, i) => (
-          <button key={i} className={`svc${svc === i ? " sel" : ""}`} onClick={() => setSvc(i)}>
+          <button key={i} className={`b-svc${svc === i ? " sel" : ""}`} onClick={() => setSvc(i)}>
             {s}
           </button>
         ))}
       </div>
-      <div className="slot-grid">
-        <div className="slot-days">
+      <div className="booking-slots">
+        <div className="b-slot-days">
           <div />
-          {DAYS.map((d) => (
-            <div key={d} className="slot-day">{d}</div>
-          ))}
+          {DAYS.map((d) => <div key={d} className="b-slot-day">{d}</div>)}
         </div>
         {MATRIX.map((row, ri) => (
-          <div key={ri} className="slot-row">
-            <div className="slot-time">{TIMES[ri]}</div>
+          <div key={ri} className="b-slot-row">
+            <div className="b-slot-time">{TIMES[ri]}</div>
             {row.map((v, ci) => {
               const isSel = slot?.[0] === ri && slot?.[1] === ci;
               const off = v === null || v === 0;
               return (
                 <button
                   key={ci}
-                  className={`slot${isSel ? " sel" : ""}${off ? " off" : ""}`}
+                  className={`b-slot${isSel ? " sel" : ""}${off ? " off" : ""}`}
                   onClick={() => !off && setSlot([ri, ci])}
                   aria-label={off ? "недоступно" : `${DAYS[ci]} ${TIMES[ri]}`}
                   aria-pressed={isSel}
@@ -265,71 +256,58 @@ function BookingWidget({ entered: _ }: WP) {
           </div>
         ))}
       </div>
-      <button className="book-btn" onClick={confirm} disabled={!slot}>
+      <button className="booking-confirm-btn" onClick={confirm} disabled={!slot}>
         {slot ? `Записаться: ${DAYS[slot[1]]} ${TIMES[slot[0]]}` : "Выберите время"}
       </button>
     </div>
   );
 }
 
-// ─── Widget 6: Telegram mini app ─────────────────────────────────────────────
+// ════════════════════════════════════════════════════════════════════
+// SCREEN 6 — TELEGRAM: phone frame as hero
+// ════════════════════════════════════════════════════════════════════
 
-function TelegramWidget({ entered }: WP) {
+function TelegramFrame({ entered }: Entered) {
   return (
-    <div className="widget tg-widget">
-      <div className="wbar">
-        <span>telegram mini app</span>
-        <span className="wbar-ok">
-          <span className="dot" />
-          доступно
-        </span>
+    <div className={`tg-frame${entered ? " fade-in" : " fade-in"}`}>
+      <div className="tg-header">
+        <div className="tg-header-name">Нотариус Иванова Е.А.</div>
+        <div className="tg-header-sub">✓ Официальный бот</div>
       </div>
-      <div style={{ display: "flex", justifyContent: "center", padding: "16px 22px 8px" }}>
-        <div className={`tg-phone sa${entered ? " in" : ""}`} style={{ transitionDelay: "180ms" }}>
-          <div className="tg-head">
-            <div className="tg-name">Нотариус Иванова Е.А.</div>
-            <div className="tg-sub">✓ Официальный бот</div>
-          </div>
-          <div className="tg-msgs">
-            <div className="tg-msg tg-in">
-              Добрый день! Хочу записаться на доверенность
-            </div>
-            <div className="tg-msg tg-out">
-              Открой сервис — выбери время и подготовь документы заранее
-            </div>
-          </div>
-          <button className="tg-open">Открыть сервис записи →</button>
+      <div className="tg-messages stagger">
+        <div className="tg-msg tg-msg-in">
+          Добрый день! Хочу записаться на доверенность
+        </div>
+        <div className="tg-msg tg-out">
+          Открой сервис — выбери время и подготовь документы заранее
         </div>
       </div>
-      <div className="wfoot">
-        <span className="wfoot-muted">Сервис — внутри привычного чата</span>
-      </div>
+      <button className="tg-launch">Открыть сервис записи →</button>
     </div>
   );
 }
 
-// ─── Widget 7: SEO – search journey ──────────────────────────────────────────
+// ════════════════════════════════════════════════════════════════════
+// SCREEN 7 — SEO: search results as main content
+// ════════════════════════════════════════════════════════════════════
 
-function SeoWidget({ entered }: WP) {
+function SearchResults({ entered }: Entered) {
   return (
-    <div className="widget seo-widget">
-      <div className={`search-bar sa${entered ? " in" : ""}`} style={{ transitionDelay: "0ms" }}>
-        <i className="s-icon" aria-hidden="true">🔍</i>
-        <span className="s-q">нотариус доверенность москва</span>
+    <div className="search-results fade-in">
+      <div className={`sr-search${entered ? "" : ""}`}>
+        <i className="sr-search-icon" aria-hidden="true">🔍</i>
+        <span className="sr-search-q">нотариус доверенность москва</span>
       </div>
-      <div className={`serp sa${entered ? " in" : ""}`} style={{ transitionDelay: "160ms" }}>
-        <div className="serp-url">notary-office.ru › uslugi › doverennost</div>
-        <div className="serp-ttl">Доверенность у нотариуса — Иванова Е.А.</div>
-        <div className="serp-snip">
+      <div className="sr-result">
+        <div className="sr-url">notary-office.ru › uslugi › doverennost</div>
+        <div className="sr-title">Доверенность у нотариуса — Иванова Е.А.</div>
+        <div className="sr-snippet">
           Оформление нотариальных доверенностей. Узнайте стоимость и подготовьте
           документы заранее.
         </div>
-        <a href="#seo" className="serp-cta">Записаться онлайн →</a>
+        <a href="#seo" className="sr-action">Записаться онлайн →</a>
       </div>
-      <div
-        className={`serp-arrow sa${entered ? " in" : ""}`}
-        style={{ transitionDelay: "320ms" }}
-      >
+      <div className="sr-flow">
         <span>↓</span>
         <span>от запроса к действию — без потерь</span>
       </div>
@@ -337,9 +315,11 @@ function SeoWidget({ entered }: WP) {
   );
 }
 
-// ─── Widget 8: Automation – before / after toggle ────────────────────────────
+// ════════════════════════════════════════════════════════════════════
+// SCREEN 8 — AUTOMATION: dark, before/after toggle
+// ════════════════════════════════════════════════════════════════════
 
-const BA = {
+const BA_DATA = {
   before: [
     "Звонок — объяснение задачи с нуля",
     "Ожидание ответа (иногда часами)",
@@ -354,170 +334,59 @@ const BA = {
   ],
 } as const;
 
-function AutomationWidget({ entered: _ }: WP) {
+function AutomationPanel(_: Entered) {
   const [view, setView] = useState<"before" | "after">("before");
   return (
-    <div className="widget">
-      <div className="wbar">
+    <div className="ba-panel fade-in">
+      <div className="ba-panel-bar">
         <span>процесс конторы</span>
       </div>
       <div className="ba-toggle">
-        <button className={`ba-btn${view === "before" ? " sel" : ""}`} onClick={() => setView("before")}>
-          КАК БЫЛО
+        <button className={`ba-tab${view === "before" ? " sel" : ""}`} onClick={() => setView("before")}>
+          как было
         </button>
-        <button className={`ba-btn${view === "after" ? " sel" : ""}`} onClick={() => setView("after")}>
-          КАК СТАЛО
+        <button className={`ba-tab${view === "after" ? " sel" : ""}`} onClick={() => setView("after")}>
+          как стало
         </button>
       </div>
-      <div className="ba-list">
-        {BA[view].map((s, i) => (
-          <div
-            key={`${view}-${i}`}
-            className={`ba-item sa in ${view === "before" ? "bad" : "good"}`}
-            style={{ transitionDelay: `${i * 65}ms` }}
-          >
-            <i className="ba-mark">{view === "before" ? "✕" : "✓"}</i>
+      <div className="ba-list stagger">
+        {BA_DATA[view].map((s, i) => (
+          <div key={`${view}-${i}`} className={`ba-row ${view === "before" ? "before-r" : "after-r"}`}>
+            <i className="ba-icon">{view === "before" ? "✕" : "✓"}</i>
             <span>{s}</span>
           </div>
         ))}
       </div>
-      <div className="wfoot">
-        <span className="wfoot-muted">
-          {view === "before" ? "5 точек трения" : "3 шага — клиент готов"}
-        </span>
+      <div className="ba-panel-foot">
+        <span>{view === "before" ? "5 точек трения" : "3 шага — клиент готов"}</span>
         {view === "after" && <span className="badge b-lime">эффект</span>}
       </div>
     </div>
   );
 }
 
-// ─── Widget 9: Final CTA ──────────────────────────────────────────────────────
+// ════════════════════════════════════════════════════════════════════
+// SCREEN 9 — FINAL: centered editorial CTA
+// ════════════════════════════════════════════════════════════════════
 
-function FinalWidget({ entered }: WP) {
+function FinalCta({ entered }: Entered) {
   return (
-    <div className="widget final-widget">
-      <div className="wbar">
-        <span>notary-it.pro</span>
-        <span style={{ opacity: .5 }}>hello@notary-it.pro</span>
-      </div>
-      <div className="final-links">
-        <div className={`sa${entered ? " in" : ""}`} style={{ transitionDelay: "80ms" }}>
-          <a href="mailto:hello@notary-it.pro" className="final-cta">
-            <span>hello@notary-it.pro</span>
-            <span style={{ opacity: .4 }}>↗</span>
-          </a>
-        </div>
-        <div className={`sa${entered ? " in" : ""}`} style={{ transitionDelay: "180ms" }}>
-          <div className="final-note">
-            Расскажите, что сейчас происходит в конторе — предложим конкретное решение без
-            обязательств.
-          </div>
-        </div>
-      </div>
-      <div className="wfoot">
-        <a href="mailto:hello@notary-it.pro">Написать →</a>
+    <div className="final-cta-box stagger">
+      <a href="mailto:hello@notary-it.pro" className="final-cta-link">
+        <span>hello@notary-it.pro</span>
+        <span aria-hidden="true">↗</span>
+      </a>
+      <div className="final-cta-note">
+        Расскажите, что сейчас происходит в конторе — предложим конкретное
+        решение без обязательств.
       </div>
     </div>
   );
 }
 
-// ─── Screen data ──────────────────────────────────────────────────────────────
-
-interface Screen {
-  id: string;
-  tone: string;
-  eyebrow: string;
-  title: string;
-  text: string;
-  result: string;
-  Widget: React.ComponentType<WP>;
-}
-
-const SCREENS: Screen[] = [
-  {
-    id: "promise",
-    tone: "",
-    eyebrow: "цифровые решения для нотариата",
-    title: "Работа конторы, которая не заставляет клиента ждать",
-    text: "Клиент знает, что взять и что сделать до визита. Контора получает подготовленного посетителя — не очередь вопросов.",
-    result: "Меньше уточняющих звонков",
-    Widget: HeroWidget,
-  },
-  {
-    id: "friction",
-    tone: "s-sky",
-    eyebrow: "как устроен сегодняшний день",
-    title: "Звонки, уточнения, ожидание — это рабочий день без системы",
-    text: "Один вопрос повторяется десять раз. Клиент ждёт ответа, сотрудник занят другим. Время уходит — дело не движется.",
-    result: "Ситуация знакома каждой конторе",
-    Widget: FrictionWidget,
-  },
-  {
-    id: "route",
-    tone: "",
-    eyebrow: "маршрут клиента",
-    title: "Клиент выбирает задачу и сразу получает следующий шаг",
-    text: "Не форма обратной связи и не «перезвоним». Понятный список: что взять, что проверить, как добраться. Всё — до визита.",
-    result: "Клиент приходит подготовленным",
-    Widget: RouteWidget,
-  },
-  {
-    id: "site",
-    tone: "s-sand",
-    eyebrow: "быстрый запуск",
-    title: "Сайт нотариуса. Всё необходимое — уже на месте",
-    text: "Готовая структура с обязательной информацией, услугами, тарифами, контактами и записью. Адаптируем под контору за 7 дней.",
-    result: "Сайт по требованиям — быстро и без хаоса",
-    Widget: SiteWidget,
-  },
-  {
-    id: "booking",
-    tone: "s-sky",
-    eyebrow: "онлайн-запись",
-    title: "Выбрал услугу, выбрал время — визит назначен",
-    text: "Не ждать звонка и не объяснять с нуля. Клиент сам проходит путь: услуга → свободное время → подтверждение.",
-    result: "Запись работает до вашего ответа",
-    Widget: BookingWidget,
-  },
-  {
-    id: "telegram",
-    tone: "s-tlgm",
-    eyebrow: "сервис внутри telegram",
-    title: "Не отправляем на сайт. Открываем сервис прямо в диалоге",
-    text: "Мини-приложение в Telegram: запись, подготовка документов, статус обращения — в одном окне без переключений.",
-    result: "Меньше переходов — больше завершённых действий",
-    Widget: TelegramWidget,
-  },
-  {
-    id: "seo",
-    tone: "",
-    eyebrow: "поиск и доверие",
-    title: "Не просто выше в поиске. Ближе к нужному действию",
-    text: "Страницы, которые отвечают на реальные нотариальные задачи. Человек ищет — находит ответ — понимает следующий шаг.",
-    result: "Целевые обращения из поиска",
-    Widget: SeoWidget,
-  },
-  {
-    id: "automation",
-    tone: "s-ink",
-    eyebrow: "индивидуальная автоматизация",
-    title: "Повторяемое действие становится системой",
-    text: "Разбираем конкретный процесс конторы, убираем лишние шаги и создаём решение вокруг существующей работы.",
-    result: "Автоматизация по фактам, не по моде",
-    Widget: AutomationWidget,
-  },
-  {
-    id: "final",
-    tone: "s-indigo",
-    eyebrow: "следующий шаг",
-    title: "Обсудить задачу",
-    text: "Расскажите, что происходит в конторе сейчас. Предложим конкретное решение — без лишних слов и обязательств.",
-    result: "Один разговор вместо долгого выбора",
-    Widget: FinalWidget,
-  },
-];
-
-// ─── Main component ───────────────────────────────────────────────────────────
+// ════════════════════════════════════════════════════════════════════
+// MAIN
+// ════════════════════════════════════════════════════════════════════
 
 export default function Home() {
   const [active, setActive] = useState(0);
@@ -528,7 +397,7 @@ export default function Home() {
     const root = pageRef.current;
     if (!root) return;
     const sections = Array.from(root.querySelectorAll<HTMLElement>("[data-screen]"));
-    const observer = new IntersectionObserver(
+    const obs = new IntersectionObserver(
       (entries) => {
         const hit = entries
           .filter((e) => e.isIntersecting)
@@ -541,8 +410,8 @@ export default function Home() {
       },
       { root, threshold: [0.5, 0.75] },
     );
-    sections.forEach((s) => observer.observe(s));
-    return () => observer.disconnect();
+    sections.forEach((s) => obs.observe(s));
+    return () => obs.disconnect();
   }, []);
 
   const goTo = useCallback((idx: number) => {
@@ -551,81 +420,190 @@ export default function Home() {
       ?.scrollIntoView({ block: "start" });
   }, []);
 
-  const total = SCREENS.length;
+  const total = 9;
 
   return (
     <main className="page" ref={pageRef} id="top">
       {/* ── Header ── */}
       <header className="masthead">
-        <a className="brand" href="#promise" aria-label="Начало страницы">
-          <span className="brandMark" aria-hidden="true">
+        <a className="brand" href="#promise" aria-label="Начало — проект Про нотариат">
+          <span className="brand-mark" aria-hidden="true">
             <i>Н</i>
             <b />
           </span>
-          <span className="brandName">
+          <span className="brand-name">
             <strong>Про нотариат</strong>
             <small>цифровые проекты · notary-it.pro</small>
           </span>
         </a>
         <a className="cta-nav" href="#final">
-          <span className="cta-nav-txt">Обсудить задачу</span>
+          <span>Обсудить задачу</span>
           <span aria-hidden="true">↗</span>
         </a>
       </header>
 
       {/* ── Nav rail ── */}
       <nav className="rail" aria-label="Навигация по экранам">
-        <span className="rail-n" aria-hidden="true">
-          {String(active + 1).padStart(2, "0")}
-        </span>
+        <span className="rail-num" aria-hidden="true">{String(active + 1).padStart(2, "0")}</span>
         <div className="rail-dots">
-          {SCREENS.map((s, i) => (
+          {Array.from({ length: total }).map((_, i) => (
             <button
-              key={s.id}
-              className={`rail-dot${active === i ? " on" : ""}`}
+              key={i}
+              className={`rail-btn${active === i ? " on" : ""}`}
               onClick={() => goTo(i)}
-              aria-label={s.eyebrow}
+              aria-label={`Экран ${i + 1}`}
               aria-current={active === i ? "step" : undefined}
             />
           ))}
         </div>
-        <span className="rail-n" aria-hidden="true">
-          {String(total).padStart(2, "0")}
-        </span>
+        <span className="rail-num" aria-hidden="true">{String(total).padStart(2, "0")}</span>
       </nav>
 
-      {/* ── Progress counter ── */}
+      {/* ── Progress ── */}
       <div className="progress" aria-hidden="true">
         {String(active + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
       </div>
 
-      {/* ── Screens ── */}
-      {SCREENS.map((s, i) => {
-        const isIn = entered.has(i);
-        return (
-          <section
-            key={s.id}
-            id={s.id}
-            className={`screen${s.tone ? " " + s.tone : ""}`}
-            data-screen={i}
-            data-in={isIn ? "" : undefined}
-            aria-label={s.eyebrow}
-          >
-            <div className="copy">
-              <p className="eyebrow">{s.eyebrow}</p>
-              <h1>{s.title}</h1>
-              <p className="lead">{s.text}</p>
-              <div className="result">
-                <span className="result-lbl">Результат</span>
-                <span className="result-val">{s.result}</span>
-              </div>
-            </div>
-            <div className="widget-wrap">
-              <s.Widget entered={isIn} />
-            </div>
-          </section>
-        );
-      })}
+      {/* ════ SCREEN 1 — PROMISE ════ */}
+      <section className="screen s-promise" id="promise" data-screen={0} data-in={entered.has(0) ? "" : undefined} aria-label="Обещание">
+        <div className="copy">
+          <p className="eyebrow">цифровые решения для нотариата</p>
+          <h1 className="h-display">Работа конторы, которая не заставляет клиента ждать</h1>
+          <p className="lead" style={{ marginTop: "32px" }}>
+            Клиент знает, что взять и что сделать до визита. Контора получает
+            подготовленного посетителя — не очередь вопросов.
+          </p>
+          <div className="result-tag" style={{ marginTop: "32px" }}>
+            <span className="result-tag-lbl">Результат</span>
+            <span className="result-tag-val">Меньше уточняющих звонков</span>
+          </div>
+        </div>
+        <RouteMini entered={entered.has(0)} />
+      </section>
+
+      {/* ════ SCREEN 2 — FRICTION ════ */}
+      <section className="screen s-friction on-dark" id="friction" data-screen={1} data-in={entered.has(1) ? "" : undefined} aria-label="Где контора теряет время">
+        <div className="friction-head">
+          <div className="copy">
+            <p className="eyebrow">как устроен сегодняшний день</p>
+            <h2 className="h-section">Звонки, уточнения, ожидание — рабочий день без системы</h2>
+          </div>
+          <div className="result-tag">
+            <span className="result-tag-lbl">Знакомо?</span>
+            <span className="result-tag-val">Каждой конторе</span>
+          </div>
+        </div>
+        <CallBoard entered={entered.has(1)} />
+      </section>
+
+      {/* ════ SCREEN 3 — ROUTE ════ */}
+      <section className="screen s-route" id="route" data-screen={2} data-in={entered.has(2) ? "" : undefined} aria-label="Маршрут клиента">
+        <div className="route-top copy">
+          <p className="eyebrow">маршрут клиента</p>
+          <h2 className="h-section">Клиент выбирает задачу и сразу получает следующий шаг</h2>
+          <p className="lead" style={{ marginTop: "24px" }}>
+            Не форма обратной связи и не «перезвоним». Понятный список: что
+            взять, что проверить, как добраться — всё до визита.
+          </p>
+        </div>
+        <RoutePanel entered={entered.has(2)} />
+      </section>
+
+      {/* ════ SCREEN 4 — SITE ════ */}
+      <section className="screen s-site" id="site" data-screen={3} data-in={entered.has(3) ? "" : undefined} aria-label="Сайт нотариуса">
+        <div className="copy">
+          <p className="eyebrow">быстрый запуск</p>
+          <h2 className="h-section">Сайт нотариуса. Всё необходимое — уже на месте</h2>
+          <p className="lead" style={{ marginTop: "24px" }}>
+            Готовая структура с обязательной информацией, услугами, тарифами,
+            контактами и записью. Адаптируем под контору за 7 дней.
+          </p>
+          <div className="result-tag" style={{ marginTop: "28px" }}>
+            <span className="result-tag-lbl">Результат</span>
+            <span className="result-tag-val">Простой сайт по требованиям — быстро</span>
+          </div>
+        </div>
+        <BrowserMock entered={entered.has(3)} />
+      </section>
+
+      {/* ════ SCREEN 5 — BOOKING ════ */}
+      <section className="screen s-booking on-dark" id="booking" data-screen={4} data-in={entered.has(4) ? "" : undefined} aria-label="Онлайн-запись">
+        <div className="copy">
+          <p className="eyebrow">онлайн-запись</p>
+          <h2 className="h-section">Выбрал услугу, выбрал время — визит назначен</h2>
+          <p className="lead" style={{ marginTop: "24px" }}>
+            Не ждать звонка и не объяснять с нуля. Клиент сам проходит путь:
+            услуга → свободное время → подтверждение.
+          </p>
+          <div className="result-tag" style={{ marginTop: "28px" }}>
+            <span className="result-tag-lbl">Результат</span>
+            <span className="result-tag-val">Запись работает до вашего ответа</span>
+          </div>
+        </div>
+        <BookingPanel entered={entered.has(4)} />
+      </section>
+
+      {/* ════ SCREEN 6 — TELEGRAM ════ */}
+      <section className="screen s-telegram" id="telegram" data-screen={5} data-in={entered.has(5) ? "" : undefined} aria-label="Telegram mini app">
+        <div className="copy">
+          <p className="eyebrow">сервис внутри telegram</p>
+          <h2 className="h-section">Не отправляем на сайт. Открываем сервис прямо в диалоге</h2>
+          <p className="lead" style={{ marginTop: "24px" }}>
+            Мини-приложение в Telegram: запись, подготовка документов, статус
+            обращения — в одном окне без переключений.
+          </p>
+          <div className="result-tag" style={{ marginTop: "28px" }}>
+            <span className="result-tag-lbl">Результат</span>
+            <span className="result-tag-val">Меньше переходов — больше завершённых действий</span>
+          </div>
+        </div>
+        <TelegramFrame entered={entered.has(5)} />
+      </section>
+
+      {/* ════ SCREEN 7 — SEO ════ */}
+      <section className="screen s-seo" id="seo" data-screen={6} data-in={entered.has(6) ? "" : undefined} aria-label="Поиск и доверие">
+        <div className="copy">
+          <p className="eyebrow">поиск и доверие</p>
+          <h2 className="h-section">Не просто выше в поиске. Ближе к нужному действию</h2>
+          <p className="lead" style={{ marginTop: "24px" }}>
+            Страницы, которые отвечают на реальные нотариальные задачи. Человек
+            ищет — находит ответ — понимает следующий шаг.
+          </p>
+          <div className="result-tag" style={{ marginTop: "28px" }}>
+            <span className="result-tag-lbl">Результат</span>
+            <span className="result-tag-val">Целевые обращения из поиска</span>
+          </div>
+        </div>
+        <SearchResults entered={entered.has(6)} />
+      </section>
+
+      {/* ════ SCREEN 8 — AUTOMATION ════ */}
+      <section className="screen s-automation on-dark" id="automation" data-screen={7} data-in={entered.has(7) ? "" : undefined} aria-label="Индивидуальная автоматизация">
+        <div className="copy">
+          <p className="eyebrow">индивидуальная автоматизация</p>
+          <h2 className="h-section">Повторяемое действие становится системой</h2>
+          <p className="lead" style={{ marginTop: "24px" }}>
+            Разбираем конкретный процесс конторы, убираем лишние шаги и создаём
+            решение вокруг существующей работы.
+          </p>
+          <div className="result-tag" style={{ marginTop: "28px" }}>
+            <span className="result-tag-lbl">Результат</span>
+            <span className="result-tag-val">Автоматизация по фактам, не по моде</span>
+          </div>
+        </div>
+        <AutomationPanel entered={entered.has(7)} />
+      </section>
+
+      {/* ════ SCREEN 9 — FINAL ════ */}
+      <section className="screen s-final on-dark" id="final" data-screen={8} data-in={entered.has(8) ? "" : undefined} aria-label="Обсудить задачу">
+        <p className="eyebrow">следующий шаг</p>
+        <h1 className="h-display">Обсудить задачу</h1>
+        <p className="lead">
+          Расскажите, что происходит в конторе сейчас. Предложим конкретное
+          решение — без лишних слов и обязательств.
+        </p>
+        <FinalCta entered={entered.has(8)} />
+      </section>
     </main>
   );
 }
