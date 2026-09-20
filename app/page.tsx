@@ -436,10 +436,15 @@ export default function Home() {
             <small>цифровые проекты · notary-it.pro</small>
           </span>
         </a>
-        <a className="cta-nav" href="#final">
-          <span>Обсудить задачу</span>
-          <span aria-hidden="true">↗</span>
-        </a>
+        <div style="display:flex; align-items:center; gap:24px;">
+          <a className="cta-nav" href="/about" style={{ borderBottom:"none" }}>
+            <span>О нас</span>
+          </a>
+          <a className="cta-nav" href="#final">
+            <span>Обсудить задачу</span>
+            <span aria-hidden="true">↗</span>
+          </a>
+        </div>
       </header>
 
       {/* ── Nav rail ── */}
