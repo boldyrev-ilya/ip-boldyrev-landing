@@ -471,6 +471,8 @@ export default function Home() {
 
       {/* ════ SCREEN 1 — PROMISE ════ */}
       <section className="screen s-promise" id="promise" data-screen={0} data-in={entered.has(0) ? "" : undefined} aria-label="Обещание">
+        <div className="blob blob-1" aria-hidden="true" />
+        <div className="blob blob-2" aria-hidden="true" />
         <div className="copy">
           <p className="eyebrow">цифровые решения для нотариата</p>
           <h1 className="h-display">Работа конторы, которая не заставляет клиента ждать</h1>
@@ -488,6 +490,7 @@ export default function Home() {
 
       {/* ════ SCREEN 2 — FRICTION ════ */}
       <section className="screen s-friction on-dark" id="friction" data-screen={1} data-in={entered.has(1) ? "" : undefined} aria-label="Где контора теряет время">
+        <div className="blob blob-1" aria-hidden="true" />
         <div className="friction-head">
           <div className="copy">
             <p className="eyebrow">как устроен сегодняшний день</p>
@@ -503,6 +506,7 @@ export default function Home() {
 
       {/* ════ SCREEN 3 — ROUTE ════ */}
       <section className="screen s-route" id="route" data-screen={2} data-in={entered.has(2) ? "" : undefined} aria-label="Маршрут клиента">
+        <div className="blob blob-1" aria-hidden="true" />
         <div className="route-top copy">
           <p className="eyebrow">маршрут клиента</p>
           <h2 className="h-section">Клиент выбирает задачу и сразу получает следующий шаг</h2>
@@ -516,6 +520,7 @@ export default function Home() {
 
       {/* ════ SCREEN 4 — SITE ════ */}
       <section className="screen s-site" id="site" data-screen={3} data-in={entered.has(3) ? "" : undefined} aria-label="Сайт нотариуса">
+        <div className="blob blob-1" aria-hidden="true" />
         <div className="copy">
           <p className="eyebrow">быстрый запуск</p>
           <h2 className="h-section">Сайт нотариуса. Всё необходимое — уже на месте</h2>
@@ -533,6 +538,7 @@ export default function Home() {
 
       {/* ════ SCREEN 5 — BOOKING ════ */}
       <section className="screen s-booking on-dark" id="booking" data-screen={4} data-in={entered.has(4) ? "" : undefined} aria-label="Онлайн-запись">
+        <div className="blob blob-1" aria-hidden="true" />
         <div className="copy">
           <p className="eyebrow">онлайн-запись</p>
           <h2 className="h-section">Выбрал услугу, выбрал время — визит назначен</h2>
@@ -550,6 +556,7 @@ export default function Home() {
 
       {/* ════ SCREEN 6 — TELEGRAM ════ */}
       <section className="screen s-telegram" id="telegram" data-screen={5} data-in={entered.has(5) ? "" : undefined} aria-label="Telegram mini app">
+        <div className="blob blob-1" aria-hidden="true" />
         <div className="copy">
           <p className="eyebrow">сервис внутри telegram</p>
           <h2 className="h-section">Не отправляем на сайт. Открываем сервис прямо в диалоге</h2>
@@ -567,6 +574,7 @@ export default function Home() {
 
       {/* ════ SCREEN 7 — SEO ════ */}
       <section className="screen s-seo" id="seo" data-screen={6} data-in={entered.has(6) ? "" : undefined} aria-label="Поиск и доверие">
+        <div className="blob blob-1" aria-hidden="true" />
         <div className="copy">
           <p className="eyebrow">поиск и доверие</p>
           <h2 className="h-section">Не просто выше в поиске. Ближе к нужному действию</h2>
@@ -584,6 +592,8 @@ export default function Home() {
 
       {/* ════ SCREEN 8 — AUTOMATION ════ */}
       <section className="screen s-automation on-dark" id="automation" data-screen={7} data-in={entered.has(7) ? "" : undefined} aria-label="Индивидуальная автоматизация">
+        <div className="blob blob-1" aria-hidden="true" />
+        <div className="blob blob-2" aria-hidden="true" />
         <div className="copy">
           <p className="eyebrow">индивидуальная автоматизация</p>
           <h2 className="h-section">Повторяемое действие становится системой</h2>
@@ -601,6 +611,8 @@ export default function Home() {
 
       {/* ════ SCREEN 9 — FINAL ════ */}
       <section className="screen s-final on-dark" id="final" data-screen={8} data-in={entered.has(8) ? "" : undefined} aria-label="Обсудить задачу">
+        <div className="blob blob-1" aria-hidden="true" />
+        <div className="blob blob-2" aria-hidden="true" />
         <p className="eyebrow">следующий шаг</p>
         <h1 className="h-display">Обсудить задачу</h1>
         <p className="lead">
