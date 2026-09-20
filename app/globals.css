@@ -1,0 +1,74 @@
+:root { --paper:#f4f3ea; --ink:#15172d; --blue:#29338f; --lime:#c8ef58; --soft:#b9cdef; }
+* { box-sizing:border-box; }
+html, body { margin:0; background:var(--ink); color:var(--ink); font-family:Arial, Helvetica, sans-serif; }
+a { color:inherit; text-decoration:none; }
+button { color:inherit; font:inherit; }
+.page { height:100svh; overflow-y:auto; overflow-x:hidden; scroll-snap-type:y mandatory; scroll-behavior:auto; }
+.screen { position:relative; min-height:100svh; padding:120px 7vw 64px; display:grid; grid-template-columns:minmax(0,1fr) minmax(320px,.56fr); gap:5vw; align-items:center; scroll-snap-align:start; scroll-snap-stop:always; overflow:hidden; background:var(--paper); }
+.masthead { position:fixed; z-index:20; inset:0 0 auto; height:86px; padding:0 5vw; display:flex; align-items:center; justify-content:space-between; pointer-events:none; mix-blend-mode:difference; color:#fff; }
+.masthead a { pointer-events:auto; }
+.brand { display:flex; align-items:center; gap:14px; }
+.brandMark { position:relative; width:43px; height:43px; display:grid; place-items:center; border:1px solid currentColor; }
+.brandMark i { font:700 24px/1 Arial,sans-serif; letter-spacing:-.12em; transform:translateX(-1px); }
+.brandMark b { position:absolute; right:-4px; top:-4px; width:10px; height:10px; border-radius:50%; background:var(--lime); box-shadow:0 0 0 3px var(--ink); }
+.brandName { display:grid; gap:3px; }
+.brandName strong { font-size:16px; letter-spacing:-.035em; }
+.brandName small { font-size:8px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; opacity:.65; }
+.contactLink { display:flex; gap:20px; padding-bottom:6px; border-bottom:1px solid; font-size:11px; font-weight:800; }
+.rail { position:fixed; z-index:20; right:22px; top:50%; transform:translateY(-50%); display:grid; justify-items:center; gap:10px; color:var(--blue); }
+.rail b,.rail span { font:700 9px/1 monospace; }
+.rail div { display:grid; gap:8px; }
+.rail button { width:5px; height:5px; padding:0; border:0; border-radius:50%; background:currentColor; opacity:.28; cursor:pointer; }
+.rail button.active { opacity:1; transform:scale(1.8); }
+.projectCopy { position:relative; z-index:2; max-width:950px; }
+.eyebrow { margin:0 0 28px; font-size:10px; font-weight:800; letter-spacing:.18em; text-transform:uppercase; }
+h1 { max-width:1000px; margin:0; font:500 clamp(50px,5.7vw,96px)/.93 Georgia,"Times New Roman",serif; letter-spacing:-.06em; }
+.projectText { max-width:690px; margin:38px 0 48px; color:#5e6572; font-size:clamp(16px,1.3vw,21px); line-height:1.5; }
+.projectResult { display:flex; align-items:baseline; gap:22px; padding-top:18px; border-top:1px solid rgba(21,23,45,.2); }
+.projectResult span { font-size:9px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; opacity:.55; }
+.projectResult strong { font:500 18px/1.2 Georgia,serif; }
+.projectSignal { position:relative; min-height:480px; padding:34px; display:flex; flex-direction:column; justify-content:flex-end; background:var(--blue); color:white; box-shadow:22px 22px 0 var(--soft); }
+.signalTop { position:absolute; top:30px; left:34px; right:34px; padding-bottom:14px; display:flex; justify-content:space-between; border-bottom:1px solid rgba(255,255,255,.25); font-size:9px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; }
+.signalTop i { color:var(--lime); font-style:normal; }
+.projectSignal>strong { font:500 clamp(68px,7vw,112px)/.85 Georgia,serif; letter-spacing:-.07em; }
+.projectSignal>p { margin:18px 0 38px; color:var(--soft); font:500 23px/1.1 Georgia,serif; }
+.projectSignal button,.projectSignal>a { padding:16px 0 5px; display:flex; justify-content:space-between; border:0; border-top:1px solid rgba(255,255,255,.28); background:none; color:white; font-size:11px; font-weight:800; cursor:pointer; }
+.screen::before { content:""; position:absolute; width:34vw; height:34vw; left:-20vw; bottom:-24vw; border:1px solid currentColor; border-radius:50%; opacity:.18; }
+.blue { background:var(--paper); }
+.paper { background:#dce7f5; }
+.sand { background:#ead9b9; }
+.lime { background:var(--lime); }
+.lime .projectSignal { background:var(--ink); box-shadow:22px 22px 0 #fff; }
+.ink { background:var(--ink); color:white; }
+.ink .projectText { color:#b9bfd0; }.ink .projectResult { border-color:rgba(255,255,255,.22); }.ink .projectSignal { background:var(--lime); color:var(--ink); box-shadow:22px 22px 0 var(--blue); }.ink .projectSignal>p { color:#454b39; }.ink .signalTop,.ink .projectSignal button { border-color:rgba(21,23,45,.25); color:var(--ink); }.ink .signalTop i { color:var(--blue); }
+.coral { background:#ff8b72; }
+.violet { background:#ccc2ff; }
+.telegram { background:#b9e3fa; }
+.telegram .projectSignal { background:#229ed9; box-shadow:22px 22px 0 #e8f6fd; }
+.telegram .projectSignal>p { color:#d9f2ff; }
+.sky { background:#9edff1; }
+.final { background:var(--blue); color:white; }
+.final .projectText { color:var(--soft); }.final .projectResult { border-color:rgba(255,255,255,.22); }.final .projectSignal { background:var(--lime); color:var(--ink); box-shadow:22px 22px 0 var(--paper); }.final .projectSignal>p { color:#454b39; }.final .signalTop,.final .projectSignal>a { border-color:rgba(21,23,45,.25); color:var(--ink); }.final .signalTop i { color:var(--blue); }
+@media (max-width:900px) {
+  .screen { padding:105px 7vw 48px; grid-template-columns:1fr; gap:24px; align-content:center; }
+  h1 { font-size:clamp(42px,10vw,70px); }
+  .projectText { margin:24px 0 26px; }
+  .projectSignal { min-height:250px; padding:26px; box-shadow:12px 12px 0 var(--soft); }
+  .signalTop { top:24px; left:26px; right:26px; }
+  .projectSignal>strong { font-size:70px; }
+  .projectSignal>p { margin:12px 0 24px; font-size:19px; }
+  .rail { display:none; }
+}
+@media (max-width:560px) {
+  .masthead { height:72px; padding:0 5vw; }
+  .brandMark { width:36px; height:36px; }.brandName small,.contactLink { display:none; }
+  .screen { min-height:100svh; padding:88px 6vw 32px; gap:18px; }
+  .eyebrow { margin-bottom:17px; }
+  h1 { font-size:clamp(38px,11vw,56px); }
+  .projectText { font-size:15px; line-height:1.42; }
+  .projectResult { padding-top:12px; display:grid; gap:7px; }
+  .projectSignal { min-height:210px; padding:22px; }
+  .signalTop { top:20px; left:22px; right:22px; }.signalTop i { display:none; }
+  .projectSignal>strong { font-size:58px; }.projectSignal>p { font-size:17px; margin-bottom:20px; }
+}
+@media (prefers-reduced-motion:reduce) { .page { scroll-behavior:auto; } }
